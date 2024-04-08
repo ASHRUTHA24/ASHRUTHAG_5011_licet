@@ -1,0 +1,71 @@
+{% extends 'beatbuddy/basic.html' %}
+{% block title %} All Songs {% endblock %}
+
+{% block body %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6" style="padding-top: 3%;">
+            <img src="/media/{{song.image}}" alt="image" height="250px" width="400px">
+        </div>
+        <div class="col-md-6">
+            <h2 style="padding-top: 5%; color: rgb(218, 99, 99);">Title: {{song.name}}</h2>
+            <h5 style="padding-top: 2%;">Category: {{song.tags }}</h5>
+            <h5 style="padding-top: 2%;">Movie: {{song.movie }}</h5>
+            <h5 style="padding-top: 2%;">Singer: {{song.singer }}</h5>
+            <audio controls style="padding-top: 2%;">
+                <source src="/media/{{song.song}}" type="audio/mp3">
+            </audio>
+            <div style="padding-top: 2%;">
+                <div class="row">
+                    <div class="col">
+                        <form action="/beatbuddy/watchlater" method='POST'>
+                            {% csrf_token %}
+                            <input type="hidden" name="video_id" value="{{song.song_id}}">
+                            <button type="submit" class="btn btn-outline-danger">Add to listen later</button>
+                        </form>
+                    </div>
+                    <div class="col">
+                        <a download href="/media/{{song.song}}" style="padding-left: 2%;"><button class="btn btn-outline-danger">Download song</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascript %}
+<script>
+    $(document).ready(function() {
+        // Function to handle form submission
+        $("form").submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // AJAX request to submit the form data
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function(response) {
+                    // Check if the response contains the message
+                    if (response.message) {
+                        // Show success message using SweetAlert2
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText); // Log any errors to the console
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

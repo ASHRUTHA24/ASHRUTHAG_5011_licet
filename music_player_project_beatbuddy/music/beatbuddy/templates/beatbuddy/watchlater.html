@@ -1,0 +1,30 @@
+{% extends 'beatbuddy/basic.html' %}
+{% block title %} Watchlater {% endblock %}
+
+{% block body %}
+{%load static%}
+<h1 style="color: rgb(46, 31, 31); text-align: center; padding-top: 3%; padding-bottom: 3%;">LISTEN LATER</h1>
+{% if song|length < 1%}
+<h3 style="text-align: center; padding-top: 5%;">You already caught up!!</h3>
+{% endif %}
+<div class="container" style="padding-left: 16%;">
+{% for i in song reversed %}
+<div class="card mb-3" style="max-width: 540px; max-height: 15rem; overflow: hidden;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="/media/{{ i.image }}" class="img-fluid rounded-start" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title" style="color: rgb(17, 88, 143); font-weight: 100;">{{ i.name }}</h5>
+        <p class="card-text">{{ i.tags }}</p>
+        <a href="/beatbuddy/songs/{{ i.song_id }}"><button class="btn btn-outline-danger">Listen Song</button></a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+</div>
+</div>
+{% endblock %}
+
